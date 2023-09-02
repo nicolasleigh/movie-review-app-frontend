@@ -5,9 +5,8 @@ import Title from '../form/Title';
 import CustomLink from '../CustomLink';
 import { commonModalClasses } from '../../utils/theme';
 import FormContainer from '../form/FormContainer';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth, useNotification } from '../../hooks';
-import { useNavigate } from 'react-router-dom';
 import { isValidEmail } from '../../utils/helper';
 // import { useTheme } from '../../hooks';
 
@@ -31,12 +30,11 @@ function Signin() {
     password: '',
   });
 
-  const navigate = useNavigate();
   const { updateNotification } = useNotification();
   const { handleLogin, authInfo } = useAuth();
-  const { isPending, isLoggedIn } = authInfo;
+  const { isPending } = authInfo;
 
-  console.log(authInfo);
+  // console.log(authInfo);
 
   const handleChange = ({ target }) => {
     const { value, name } = target;
@@ -53,9 +51,10 @@ function Signin() {
     handleLogin(userInfo.email, userInfo.password);
   };
 
-  useEffect(() => {
-    if (isLoggedIn) navigate('/');
-  }, [isLoggedIn]);
+  // // already used in AuthProvider.jsx
+  // useEffect(() => {
+  //   if (isLoggedIn) navigate('/');
+  // }, [isLoggedIn]);
 
   return (
     <FormContainer>

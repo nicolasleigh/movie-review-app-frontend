@@ -34,16 +34,20 @@ function EmailVerification() {
   const { updateNotification } = useNotification();
 
   const { state } = useLocation();
+  // const location = useLocation();
+  // console.log(location);
   const user = state?.user;
 
   const navigate = useNavigate();
 
   const focusPrevInputField = (index) => {
-    let nextIndex;
-    const diff = index - 1;
-    nextIndex = diff !== 0 ? diff : 0;
-    setActiveOtpIndex(nextIndex);
+    // let nextIndex;
+    // const diff = index - 1;
+    // nextIndex = diff !== 0 ? diff : 0;
+    // setActiveOtpIndex(nextIndex);
+    setActiveOtpIndex(index - 1); // still working!
   };
+
   const focusNextInputField = (index) => {
     setActiveOtpIndex(index + 1);
   };
@@ -55,6 +59,7 @@ function EmailVerification() {
     // console.log(value);
     if (!value) focusPrevInputField(currentOTPIndex);
     else focusNextInputField(currentOTPIndex);
+
     setOtp([...newOpt]);
   };
 

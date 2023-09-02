@@ -3,9 +3,13 @@ import client from './client';
 export const createUser = async (userInfo) => {
   try {
     const { data } = await client.post('/user/create', userInfo);
+    console.log(data);
+    // // id name email
     return data;
   } catch (error) {
     const { response } = error;
+    // console.log(error);
+    // console.log(response);
     if (response?.data) {
       return response.data;
     }
@@ -34,7 +38,8 @@ export const signInUser = async (userInfo) => {
     const { data } = await client.post('/user/sign-in', userInfo);
     return data;
   } catch (error) {
-    console.log(error.response?.data);
+    // console.log(error.response?.data);
+
     const { response } = error;
     if (response?.data) {
       return response.data;
@@ -54,7 +59,7 @@ export const getIsAuth = async (token) => {
     });
     return data;
   } catch (error) {
-    console.log(error.response?.data);
+    // console.log(error.response?.data);
     const { response } = error;
     if (response?.data) {
       return response.data;

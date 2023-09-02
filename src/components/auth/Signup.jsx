@@ -43,6 +43,7 @@ function Signup() {
   const { updateNotification } = useNotification();
 
   const handleChange = ({ target }) => {
+    // console.log(target);
     const { value, name } = target;
     setUserInfo({ ...userInfo, [name]: value });
     // console.log(target.value, target.name);
@@ -54,12 +55,14 @@ function Signup() {
     if (!ok) return updateNotification('error', error);
 
     const response = await createUser(userInfo);
-    if (response.error) return console.log(response.error);
+    // already defined 'error', so don't use desctructuring
+    console.log(response);
+    if (response.error) return updateNotification('error', response.error);
     navigate('/auth/verification', {
       state: { user: response.user },
       replace: true,
     });
-    console.log(response.user);
+    // console.log(response.user);
   };
 
   const { name, email, password } = userInfo;

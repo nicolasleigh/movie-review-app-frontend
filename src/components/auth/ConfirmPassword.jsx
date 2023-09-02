@@ -70,7 +70,7 @@ function ConfirmPassword() {
     updateNotification('success', message);
     navigate('/auth/signin', { replace: true });
 
-    console.log(password);
+    // console.log(password);
   };
 
   if (isVerifying)
