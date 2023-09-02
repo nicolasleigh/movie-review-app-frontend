@@ -1,5 +1,7 @@
+import MovieUpload from './MovieUpload';
+
 function Dashboard() {
-  return <div>DashBoard</div>;
+  return <MovieUpload />;
 }
 
 export default Dashboard;

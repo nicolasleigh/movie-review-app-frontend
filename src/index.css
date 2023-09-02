@@ -50,6 +50,27 @@ https://codepen.io/nelledejones/pen/gOOPWrK */
   }
 }
 
+/* custom scrollbar css  https://www.w3schools.com/howto/howto_css_custom_scrollbar.asp */
+.custom-scroll-bar::-webkit-scrollbar {
+  width: 2px;
+  height: 4px;
+}
+
+/* Track */
+.custom-scroll-bar::-webkit-scrollbar-track {
+  background: #222;
+}
+
+/* Handle */
+.custom-scroll-bar::-webkit-scrollbar-thumb {
+  background: rgb(224, 201, 251);
+}
+
+/* Handle on hover */
+.custom-scroll-bar::-webkit-scrollbar-thumb:hover {
+  background: rgb(143, 190, 245);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
