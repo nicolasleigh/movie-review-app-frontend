@@ -76,7 +76,7 @@ function TagsInput({ name, onChange }) {
           id={name}
           ref={inputRef}
           type='text'
-          className='h-full flex-grow bg-transparent outline-none dark:text-white'
+          className='h-full flex-grow bg-transparent outline-none dark:text-white text-primary'
           placeholder='Tag one, Tag two'
           value={tag}
           onChange={handleOnChange}

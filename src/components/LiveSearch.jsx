@@ -32,12 +32,16 @@ function LiveSearch({
   };
 
   const handleSelection = (selectedItem) => {
-    onSelect(selectedItem);
+    if (selectedItem) {
+      onSelect(selectedItem);
+      closeSearch();
+    }
   };
 
   const handleKeyDown = ({ key }) => {
+    // console.log(key);
     let nextCount;
-    const keys = ['ArrowDown', 'ArrowUp', 'Enter', 'Escape'];
+    const keys = ['ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'Backspace'];
     if (!keys.includes(key)) return;
 
     // move selection up and down
@@ -47,6 +51,8 @@ function LiveSearch({
     if (key === 'ArrowUp') {
       nextCount = (focusedIndex + results.length - 1) % results.length;
     }
+    if (key === 'Backspace') return closeSearch();
+
     if (key === 'Enter') return handleSelection(results[focusedIndex]);
 
     setFocusedIndex(nextCount);
