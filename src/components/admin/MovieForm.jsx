@@ -5,6 +5,8 @@ import TagsInput from '../TagsInput';
 import Submit from '../form/Submit';
 import { useNotification } from '../../hooks';
 import WritersModal from '../modals/WritersModal';
+import CastForm from '../form/CastForm';
+import CastModal from '../modals/CastModal';
 
 export const results = [
   {
@@ -45,6 +47,19 @@ export const results = [
   },
 ];
 
+export const renderItem = (result) => {
+  return (
+    <div key={result.id} className='flex space-x-2 rounded overflow-hidden'>
+      <img
+        src={result.avatar}
+        alt={result.name}
+        className='w-16 h-16 object-cover'
+      />
+      <p className='dark:text-white font-semibold'>{result.name}</p>
+    </div>
+  );
+};
+
 const defaultMovieInfo = {
   title: '',
   storyLine: '',
@@ -59,27 +74,17 @@ const defaultMovieInfo = {
   language: '',
   status: '',
 };
+
 function MovieForm() {
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
   const [showWritersModal, setShowWritersModal] = useState(false);
+  const [showCastModal, setShowCastModal] = useState(false);
+
   const { updateNotification } = useNotification();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(movieInfo);
-  };
-
-  const renderItem = (result) => {
-    return (
-      <div key={result.key} className='flex space-x-2 rounded overflow-hidden'>
-        <img
-          src={result.avatar}
-          alt={result.name}
-          className='w-16 h-16 object-cover'
-        />
-        <p className='dark:text-white font-semibold'>{result.name}</p>
-      </div>
-    );
   };
 
   const handleChange = ({ target }) => {
@@ -93,6 +98,11 @@ function MovieForm() {
 
   const updateDirector = (profile) => {
     setMovieInfo({ ...movieInfo, director: profile });
+  };
+
+  const updateCast = (castInfo) => {
+    const { cast } = movieInfo;
+    setMovieInfo({ ...movieInfo, cast: [...cast, castInfo] });
   };
 
   const updateWriters = (profile) => {
@@ -115,6 +125,13 @@ function MovieForm() {
   const displayWritersModal = () => {
     setShowWritersModal(true);
   };
+  const hideCastModal = () => {
+    setShowCastModal(false);
+  };
+
+  const displayCastModal = () => {
+    setShowCastModal(true);
+  };
 
   const handleWriterRemove = (profileId) => {
     const { writers } = movieInfo;
@@ -123,7 +140,14 @@ function MovieForm() {
     setMovieInfo({ ...movieInfo, writers: [...newWriters] });
   };
 
-  const { title, storyLine, director, writers } = movieInfo;
+  const handleCastRemove = (profileId) => {
+    const { cast } = movieInfo;
+    const newCast = cast.filter(({ profile }) => profile.id !== profileId);
+    if (!newCast.length) hideCastModal();
+    setMovieInfo({ ...movieInfo, cast: [...newCast] });
+  };
+
+  const { title, storyLine, director, writers, cast } = movieInfo;
   return (
     <>
       <form onSubmit={handleSubmit} className='flex space-x-3 '>
@@ -176,12 +200,12 @@ function MovieForm() {
               <LabelWithBadge badge={writers.length} htmlFor='writers'>
                 Writers
               </LabelWithBadge>
-              <button
+              <ViewAllBtn
                 onClick={displayWritersModal}
-                className='dark:text-white text-primary hover:underline transition'
+                visible={writers.length}
               >
                 View All
-              </button>
+              </ViewAllBtn>
             </div>
             <LiveSearch
               name='writers'
@@ -191,6 +215,19 @@ function MovieForm() {
               onSelect={updateWriters}
             />
           </div>
+
+          <div>
+            <div className='flex justify-between'>
+              <LabelWithBadge badge={cast.length}>
+                Add Cast & Crew
+              </LabelWithBadge>
+              <ViewAllBtn onClick={displayCastModal} visible={cast.length}>
+                View All
+              </ViewAllBtn>
+            </div>
+            <CastForm onSubmit={updateCast} />
+          </div>
+
           <Submit value='Upload' />
         </div>
         <div className='w-[30%] h-5 bg-blue-400'></div>
@@ -201,6 +238,12 @@ function MovieForm() {
         profiles={writers}
         visible={showWritersModal}
         onRemoveClick={handleWriterRemove}
+      />
+      <CastModal
+        onClose={hideCastModal}
+        casts={cast}
+        visible={showCastModal}
+        onRemoveClick={handleCastRemove}
       />
     </>
   );
@@ -217,8 +260,9 @@ const Label = ({ children, htmlFor }) => {
   );
 };
 
-const LabelWithBadge = ({ children, htmlFor, badge }) => {
+const LabelWithBadge = ({ children, htmlFor, badge = 0 }) => {
   const renderBadge = () => {
+    if (!badge) return null;
     return (
       <span className='dark:bg-dark-subtle bg-light-subtle text-white absolute top-0 right-0 translate-x-2 -translate-y-1 text-xs w-5 h-5 rounded-full flex justify-center items-center'>
         {badge <= 9 ? badge : '9+'}
@@ -231,6 +275,18 @@ const LabelWithBadge = ({ children, htmlFor, badge }) => {
       <Label htmlFor={htmlFor}>{children}</Label>
       {renderBadge()}
     </div>
+  );
+};
+
+const ViewAllBtn = ({ visible, children, onClick }) => {
+  if (!visible) return null;
+  return (
+    <button
+      onClick={onClick}
+      className='dark:text-white text-primary hover:underline transition'
+    >
+      {children}
+    </button>
   );
 };
 
