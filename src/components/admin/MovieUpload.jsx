@@ -4,8 +4,9 @@ import { useNotification } from '../../hooks';
 import { uploadTrailer } from '../../api/movie';
 import { useState } from 'react';
 import MovieForm from './MovieForm';
+import ModalContainer from '../modals/ModalContainer';
 
-function MovieUpload() {
+function MovieUpload({ visible, onClose }) {
   const [videoSelected, setVideoSelected] = useState(false);
   const [videoUploaded, setVideoUploaded] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -29,8 +30,6 @@ function MovieUpload() {
     setVideoInfo({ url, public_id });
   };
 
-  console.log(videoInfo);
-
   const handleChange = (file) => {
     const formData = new FormData();
     formData.append('video', file); // matches backend movie router -- uploadVideo.single('video')
@@ -47,22 +46,20 @@ function MovieUpload() {
   };
 
   return (
-    <div className='fixed inset-0 dark:bg-white dark:bg-opacity-50 bg-primary bg-opacity-50 backdrop-blur-sm flex items-center justify-center'>
-      <div className='dark:bg-primary bg-white rounded w-[45rem] h-[40rem] overflow-auto p-2 custom-scroll-bar'>
-        {/* <UploadProgress
-          visible={!videoUploaded && videoSelected}
-          message={getUploadProgressValue()}
-          width={uploadProgress}
-        />
-        <TrailerSelector
-          visible={!videoSelected}
-          onTypeError={handleTypeError}
-          handleChange={handleChange}
-        /> */}
+    <ModalContainer visible={visible} onClose={onClose}>
+      {/* <UploadProgress
+              visible={!videoUploaded && videoSelected}
+              message={getUploadProgressValue()}
+              width={uploadProgress}
+            />
+            <TrailerSelector
+              visible={!videoSelected}
+              onTypeError={handleTypeError}
+              handleChange={handleChange}
+            /> */}
 
-        <MovieForm />
-      </div>
-    </div>
+      <MovieForm />
+    </ModalContainer>
   );
 }
 

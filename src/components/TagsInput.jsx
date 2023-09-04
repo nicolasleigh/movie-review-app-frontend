@@ -61,7 +61,7 @@ function TagsInput({ value, name, onChange }) {
 
   useEffect(() => {
     // javascript scroll into view  https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
-    inputRef.current.scrollIntoView();
+    inputRef.current?.scrollIntoView(false);
   }, [tag]);
 
   return (

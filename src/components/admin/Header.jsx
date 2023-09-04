@@ -68,6 +68,11 @@ const CreateOptions = ({ options, visible, onClose }) => {
     e.target.classList.remove('animate-scale');
   };
 
+  const handleClick = (fn) => {
+    fn();
+    onClose();
+  };
+
   if (!visible) return null;
   return (
     <div
@@ -78,7 +83,7 @@ const CreateOptions = ({ options, visible, onClose }) => {
     >
       {options.map(({ title, onClick }) => {
         return (
-          <Option key={title} onClick={onClick}>
+          <Option key={title} onClick={() => handleClick(onClick)}>
             {title}
           </Option>
         );
