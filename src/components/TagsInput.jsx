@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 
-function TagsInput({ name, onChange }) {
+function TagsInput({ value, name, onChange }) {
   const [tag, setTag] = useState('');
   const [tags, setTags] = useState([]);
 
@@ -54,6 +54,10 @@ function TagsInput({ name, onChange }) {
       'border-primary'
     );
   };
+
+  useEffect(() => {
+    if (value.length) setTags(value);
+  }, [value]);
 
   useEffect(() => {
     // javascript scroll into view  https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
