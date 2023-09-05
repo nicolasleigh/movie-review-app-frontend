@@ -20,6 +20,7 @@ import DirectorSelector from '../DirectorSelector';
 import WriterSelector from '../WriterSelector';
 import { ViewAllBtn } from '../ViewAllButton';
 import { LabelWithBadge } from '../LabelWithBadge';
+import { validateMovie } from '../../utils/validator';
 
 const defaultMovieInfo = {
   title: '',
@@ -36,7 +37,7 @@ const defaultMovieInfo = {
   status: '',
 };
 
-function MovieForm() {
+function MovieForm({ onSubmit, busy }) {
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
   const [showWritersModal, setShowWritersModal] = useState(false);
   const [showCastModal, setShowCastModal] = useState(false);
@@ -47,7 +48,49 @@ function MovieForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(movieInfo);
+    const { error } = validateMovie(movieInfo);
+    if (error) return updateNotification('error', error);
+
+    const { tags, genres, cast, writers, director, poster } = movieInfo;
+
+    const formData = new FormData();
+    const finalMovieInfo = {
+      ...movieInfo,
+    };
+
+    finalMovieInfo.tags = JSON.stringify(tags);
+    finalMovieInfo.genres = JSON.stringify(genres);
+
+    // cast: [
+    //   {
+    //     actor: { type: mongoose.Schema.Types.ObjectId, ref: 'Actor' },
+    //     roleAs: String,
+    //     leadActor: Boolean,
+    //   },
+    // ],
+
+    // console.log(cast);
+    const finalCast = cast.map((c) => ({
+      actor: c.profile.id,
+      roleAs: c.roleAs,
+      leadActor: c.leadActor,
+    }));
+    finalMovieInfo.cast = JSON.stringify(finalCast);
+
+    if (writers.length) {
+      const finalWriters = writers.map((c) => c.id);
+      finalMovieInfo.writers = JSON.stringify(finalWriters);
+    }
+
+    if (director.id) finalMovieInfo.director = director.id;
+
+    if (poster) finalMovieInfo.poster = poster;
+
+    for (let key in finalMovieInfo) {
+      formData.append(key, finalMovieInfo[key]);
+    }
+
+    onSubmit(formData);
   };
 
   const updatePosterForUI = (file) => {
@@ -215,7 +258,12 @@ function MovieForm() {
             name='releseDate'
           />
 
-          <Submit value='Upload' onClick={handleSubmit} type='button' />
+          <Submit
+            busy={busy}
+            value='Upload'
+            onClick={handleSubmit}
+            type='button'
+          />
         </div>
         <div className='w-[30%] space-y-5'>
           <PosterSelector
