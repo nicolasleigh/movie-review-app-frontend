@@ -1,5 +1,5 @@
 import AppInfoBox from '../AppInfoBox';
-import LatesUploads from '../LatesUploads';
+import LatestUploads from '../LatestUploads';
 
 function Dashboard() {
   return (
@@ -8,7 +8,7 @@ function Dashboard() {
       <AppInfoBox title='Totle Reviews' subTitle='1,500' />
       <AppInfoBox title='Totle Users' subTitle='200' />
 
-      <LatesUploads />
+      <LatestUploads />
     </div>
   );
 }

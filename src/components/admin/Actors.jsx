@@ -1,44 +1,56 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsPencilSquare, BsTrash } from 'react-icons/bs';
+import { getActors } from '../../api/actor';
+import { useNotification } from '../../hooks';
+import NextAndPrevButton from '../NextAndPrevButton';
+
+let currentPageNo = 0;
+const limit = 4;
 
 function Actors() {
+  const [actors, setActors] = useState([]);
+  const [reachedToEnd, setReachedToEnd] = useState(false);
+  const { updateNotification } = useNotification();
+
+  const fetchActors = async (pageNo) => {
+    const { profiles, error } = await getActors(pageNo, limit);
+    if (error) return updateNotification('error', error);
+
+    if (!profiles.length) {
+      currentPageNo = pageNo - 1;
+      return setReachedToEnd(true);
+    }
+    setActors([...profiles]);
+  };
+
+  const handleOnNextClick = () => {
+    if (reachedToEnd) return;
+    currentPageNo += 1;
+    fetchActors(currentPageNo);
+  };
+
+  const handleOnPrevClick = () => {
+    if (currentPageNo <= 0) return;
+    if (reachedToEnd) setReachedToEnd(false);
+
+    currentPageNo -= 1;
+    fetchActors(currentPageNo);
+  };
+
+  useEffect(() => {
+    fetchActors(currentPageNo);
+  }, []);
   return (
-    <div className='grid grid-cols-4 gap-3 my-5'>
-      <ActorProfile
-        profile={{
-          name: 'John Doe',
-          avatar:
-            'https://plus.unsplash.com/premium_photo-1671718110228-a1d3f64163fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyNnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80',
-          about:
-            'lore ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
-        }}
-      />
-      <ActorProfile
-        profile={{
-          name: 'John Doe',
-          avatar:
-            'https://plus.unsplash.com/premium_photo-1671718110228-a1d3f64163fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyNnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80',
-          about:
-            'lore ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
-        }}
-      />
-      <ActorProfile
-        profile={{
-          name: 'John Doe',
-          avatar:
-            'https://plus.unsplash.com/premium_photo-1671718110228-a1d3f64163fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyNnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80',
-          about:
-            'lore ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
-        }}
-      />
-      <ActorProfile
-        profile={{
-          name: 'John Doe',
-          avatar:
-            'https://plus.unsplash.com/premium_photo-1671718110228-a1d3f64163fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyNnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80',
-          about:
-            'lore ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
-        }}
+    <div className='p-5'>
+      <div className='grid grid-cols-4 gap-5'>
+        {actors.map((actor) => {
+          return <ActorProfile profile={actor} key={actor.id} />;
+        })}
+      </div>
+      <NextAndPrevButton
+        className='mt-5'
+        onNextClick={handleOnNextClick}
+        onPrevClick={handleOnPrevClick}
       />
     </div>
   );
@@ -46,6 +58,7 @@ function Actors() {
 
 const ActorProfile = ({ profile }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const acceptedNameLength = 15;
 
   const handleOnMouseEnter = () => {
     setShowOptions(true);
@@ -55,6 +68,11 @@ const ActorProfile = ({ profile }) => {
   };
 
   if (!profile) return null;
+
+  const getName = (name) => {
+    if (name.length <= acceptedNameLength) return name;
+    return name.substring(0, acceptedNameLength) + '..';
+  };
   const { name, avatar, about = '' } = profile;
 
   return (
@@ -71,10 +89,10 @@ const ActorProfile = ({ profile }) => {
         />
 
         <div className='px-2'>
-          <h1 className='text-xl text-primary dark:text-white font-semibold'>
-            {name}
+          <h1 className='text-xl text-primary dark:text-white font-semibold whitespace-nowrap'>
+            {getName(name)}
           </h1>
-          <p className='text-primary dark:text-white'>
+          <p className='text-primary dark:text-white opacity-70'>
             {about.substring(0, 50)}
           </p>
         </div>

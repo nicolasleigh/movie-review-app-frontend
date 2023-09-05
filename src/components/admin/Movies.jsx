@@ -1,5 +1,59 @@
+import { useEffect, useState } from 'react';
+import { MovieListItem } from '../MovieListItem';
+import { getMovies } from '../../api/movie';
+import { useNotification } from '../../hooks';
+import NextAndPrevButton from '../NextAndPrevButton';
+
+const limit = 2;
+let currentPageNo = 0;
+
 function Movies() {
-  return <div>Movies</div>;
+  const [movies, setMovies] = useState([]);
+  const { updateNotification } = useNotification();
+  const [reachedToEnd, setReachedToEnd] = useState(false);
+
+  const fetchMovies = async (pageNo) => {
+    const { error, movies } = await getMovies(pageNo, limit);
+    if (error) return updateNotification('error', error);
+
+    if (!movies.length) {
+      currentPageNo = pageNo - 1;
+      return setReachedToEnd(true);
+    }
+
+    setMovies([...movies]);
+  };
+
+  const handleOnNextClick = () => {
+    if (reachedToEnd) return;
+    currentPageNo += 1;
+    fetchMovies(currentPageNo);
+  };
+
+  const handleOnPrevClick = () => {
+    if (currentPageNo <= 0) return;
+    if (reachedToEnd) setReachedToEnd(false);
+
+    currentPageNo -= 1;
+    fetchMovies(currentPageNo);
+  };
+
+  useEffect(() => {
+    fetchMovies(currentPageNo);
+  }, []);
+
+  return (
+    <div className='space-y-3 p-5'>
+      {movies.map((movie) => {
+        return <MovieListItem movie={movie} key={movie.id} />;
+      })}
+      <NextAndPrevButton
+        className='mt-5'
+        onNextClick={handleOnNextClick}
+        onPrevClick={handleOnPrevClick}
+      />
+    </div>
+  );
 }
 
 export default Movies;
