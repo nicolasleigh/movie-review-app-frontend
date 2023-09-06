@@ -8,6 +8,7 @@ import Header from '../components/admin/Header';
 import MovieUpload from '../components/admin/MovieUpload';
 import { useState } from 'react';
 import ActorUpload from '../components/modals/ActorUpload';
+import SearchMovies from '../components/admin/SearchMovies';
 
 function AdminNavigator() {
   const [showMovieUploadModal, setShowMovieUploadModal] = useState(false);
@@ -38,6 +39,7 @@ function AdminNavigator() {
             <Route path='/' element={<Dashboard />} />
             <Route path='/movies' element={<Movies />} />
             <Route path='/actors' element={<Actors />} />
+            <Route path='/search' element={<SearchMovies />} />
             <Route path='/*' element={<NotFound />} />
           </Routes>
         </div>
