@@ -13,7 +13,11 @@ export const MovieListItem = ({
         <tr>
           <td>
             <div className='w-24'>
-              <img className='w-full aspect-video' src={poster} alt={title} />
+              <img
+                className='w-full aspect-square object-cover'
+                src={poster}
+                alt={title}
+              />
             </div>
           </td>
 

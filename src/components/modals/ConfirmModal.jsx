@@ -11,7 +11,7 @@ function ConfirmModal({ busy, visible, onConfirm, onCancel, title, subtitle }) {
         <p className='text-secondary dark:text-white text-sm'>{subtitle}</p>
         <div className='flex items-center space-x-3 mt-3'>
           {busy ? (
-            <p className='flex items-center space-x-2'>
+            <p className='flex items-center space-x-2 text-primary dark:text-white'>
               <FaSpinner className='animate-spin' />
               <span>Please wait</span>
             </p>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { commonInputClasses } from '../../utils/theme';
 import TagsInput from '../TagsInput';
 import Submit from '../form/Submit';
@@ -37,7 +37,7 @@ const defaultMovieInfo = {
   status: '',
 };
 
-function MovieForm({ onSubmit, busy }) {
+function MovieForm({ onSubmit, busy, initialState, btnTitle }) {
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
   const [showWritersModal, setShowWritersModal] = useState(false);
   const [showCastModal, setShowCastModal] = useState(false);
@@ -175,6 +175,17 @@ function MovieForm({ onSubmit, busy }) {
     setMovieInfo({ ...movieInfo, cast: [...newCast] });
   };
 
+  useEffect(() => {
+    if (initialState) {
+      setMovieInfo({
+        ...initialState,
+        poster: null,
+        releseDate: initialState.releseDate.split('T')[0],
+      });
+      setSelectedPosterForUI(initialState.poster);
+    }
+  }, [initialState]);
+
   const {
     title,
     storyLine,
@@ -185,6 +196,7 @@ function MovieForm({ onSubmit, busy }) {
     type,
     language,
     status,
+    releseDate,
   } = movieInfo;
   return (
     <>
@@ -256,11 +268,12 @@ function MovieForm({ onSubmit, busy }) {
             className={commonInputClasses + ' border-2 rounded p-1 w-auto'}
             onChange={handleChange}
             name='releseDate'
+            value={releseDate}
           />
 
           <Submit
             busy={busy}
-            value='Upload'
+            value={btnTitle}
             onClick={handleSubmit}
             type='button'
           />
