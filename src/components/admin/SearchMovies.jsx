@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { searchMovieForAdmin } from '../../api/movie';
 import { useNotification } from '../../hooks';
-import { MovieListItem } from '../MovieListItem';
+import MovieListItem from '../MovieListItem';
 import NotFoundText from '../NotFoundText';
 
 function SearchMovies() {
@@ -28,6 +28,19 @@ function SearchMovies() {
     setMovies([...results]);
   };
 
+  const handleAfterDelete = (movie) => {
+    const updatedMovies = movies.filter((m) => m.id !== movie.id);
+    setMovies([...updatedMovies]);
+  };
+
+  const handleAfterUpdate = (movie) => {
+    const updatedMovies = movies.map((m) => {
+      if (m.id === movie.id) return movie;
+      return m;
+    });
+    setMovies([...updatedMovies]);
+  };
+
   useEffect(() => {
     if (query.trim()) searchMovies(query);
   }, [query]);
@@ -37,7 +50,14 @@ function SearchMovies() {
       <NotFoundText text='Record not found!' visible={resultNotFound} />
       {!resultNotFound &&
         movies.map((movie) => {
-          return <MovieListItem movie={movie} key={movie.id} />;
+          return (
+            <MovieListItem
+              movie={movie}
+              key={movie.id}
+              afterDelete={handleAfterDelete}
+              afterUpdate={handleAfterUpdate}
+            />
+          );
         })}
     </div>
   );
