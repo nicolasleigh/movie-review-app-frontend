@@ -28,6 +28,7 @@ const MovieListItem = ({ movie, afterDelete, afterUpdate }) => {
   const handleOnEditClick = () => {
     setShowUpdateModal(true);
     setSelectedMovieId(movie.id);
+    console.log(movie);
   };
 
   const handleOnUpdate = (movie) => {
