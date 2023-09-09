@@ -19,8 +19,8 @@ function HeroSlidShow() {
 
   const { updateNotification } = useNotification();
 
-  const fetchLatestUploads = async () => {
-    const { error, movies } = await getLatestUploads();
+  const fetchLatestUploads = async (signal) => {
+    const { error, movies } = await getLatestUploads(signal);
     if (error) return updateNotification('error', error);
 
     setSlides([...movies]);
@@ -93,7 +93,8 @@ function HeroSlidShow() {
   };
 
   useEffect(() => {
-    fetchLatestUploads();
+    const ac = new AbortController();
+    fetchLatestUploads(ac.signal);
     // https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
     document.addEventListener('visibilitychange', handleOnVisibilityChange);
 
@@ -103,6 +104,7 @@ function HeroSlidShow() {
         'visibilitychange',
         handleOnVisibilityChange
       );
+      ac.abort();
     };
   }, []);
 
@@ -192,7 +194,7 @@ const Slide = forwardRef((props, ref) => {
         />
       )}
       {title && (
-        <div className='absolute inset-0 flex flex-col justify-end py-3 bg-gradient-to-t from-white dark:from-primary'>
+        <div className='absolute inset-0 flex flex-col justify-end py-3 bg-gradient-to-t via-transparent dark:via-transparent from-white dark:from-primary'>
           <h1 className='font-semibold text-4xl dark:text-highlight-dark text-highlight'>
             {title}
           </h1>

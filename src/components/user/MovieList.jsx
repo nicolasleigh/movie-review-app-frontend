@@ -1,6 +1,7 @@
 import GridContainer from '../GridContainer';
 import { Link } from 'react-router-dom';
 import RatingStar from '../RatingStar';
+import { getPoster } from '../../utils/helper';
 
 const trimTitle = (text = '') => {
   if (text.length <= 20) return text;
@@ -24,10 +25,14 @@ function MovieList({ title, movies = [] }) {
 }
 
 const ListItem = ({ movie }) => {
-  const { id, title, poster, reviews } = movie;
+  const { id, responsivePosters, title, poster, reviews } = movie;
   return (
     <Link to={'/movie/' + id}>
-      <img className='aspect-video object-cover' src={poster} alt={title} />
+      <img
+        className='aspect-video object-cover'
+        src={getPoster(responsivePosters) || poster}
+        alt={title}
+      />
       <h1
         className='text-lg dark:text-white text-secondary font-semibold'
         title={title}

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { deleteMovie } from '../api/movie';
 import { useNotification } from '../hooks';
 import UpdateMovie from './modals/UpdateMovie';
+import { getPoster } from '../utils/helper';
 
 const MovieListItem = ({ movie, afterDelete, afterUpdate }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -67,7 +68,7 @@ const MovieListItem = ({ movie, afterDelete, afterUpdate }) => {
 };
 
 const MovieCard = ({ movie, onDeleteClick, onOpenClick, onEditClick }) => {
-  const { poster, title, genres = [], status } = movie;
+  const { poster, title, responsivePosters, genres = [], status } = movie;
   return (
     <table className='w-full border-b'>
       <tbody>
@@ -76,7 +77,7 @@ const MovieCard = ({ movie, onDeleteClick, onOpenClick, onEditClick }) => {
             <div className='w-24'>
               <img
                 className='w-full aspect-square object-cover'
-                src={poster}
+                src={getPoster(responsivePosters) || poster}
                 alt={title}
               />
             </div>
