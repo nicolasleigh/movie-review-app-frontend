@@ -1,15 +1,19 @@
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Submit from './Submit';
 
-const ratings = new Array(10).fill('');
+const createArray = (count) => {
+  return new Array(count).fill('');
+};
 
-function RatingForm({ onSubmit, busy }) {
+const ratings = createArray(10);
+
+function RatingForm({ onSubmit, initialState, busy }) {
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [content, setContent] = useState('');
 
   const handleMouseEnter = (index) => {
-    const ratings = new Array(index + 1).fill(index);
+    const ratings = createArray(index + 1);
     // console.log(ratings);
     setSelectedRatings([...ratings]);
   };
@@ -27,6 +31,13 @@ function RatingForm({ onSubmit, busy }) {
 
     onSubmit(data);
   };
+
+  useEffect(() => {
+    if (initialState) {
+      setContent(initialState.content);
+      setSelectedRatings(createArray(initialState.rating));
+    }
+  }, [initialState]);
 
   return (
     <div>
