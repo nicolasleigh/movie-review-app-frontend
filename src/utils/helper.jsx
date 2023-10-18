@@ -5,6 +5,8 @@ export const isValidEmail = (email) => {
 
 export const getToken = () => localStorage.getItem('auth-token');
 
+// Handling Errors
+// https://axios-http.com/docs/handling_errors
 export const catchError = (error) => {
   console.log(error.response?.data);
 

@@ -4,6 +4,8 @@ import client from './client';
 export const createActor = async (formData) => {
   const token = getToken();
   try {
+    // POST Requests
+    // https://axios-http.com/docs/post_example
     const { data } = await client.post('/actor/create', formData, {
       headers: {
         authorization: `Bearer ${token}`,

@@ -28,7 +28,7 @@ function AuthProvider({ children }) {
       return setAuthInfo({ ...authInfo, isPending: false, error });
     }
 
-    navigate('/'), { replace: true };
+    navigate('/', { replace: true });
     setAuthInfo({
       profile: { ...user },
       isLoggedIn: true,
