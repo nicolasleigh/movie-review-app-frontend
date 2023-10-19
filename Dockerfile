@@ -6,6 +6,7 @@ RUN npm ci
 COPY ./ ./
 ENV VITE_BASE_URL="/api"
 RUN npm run build
+RUN npm run server
 VOLUME /app/node_modules
 VOLUME ./frontend:/app
 
