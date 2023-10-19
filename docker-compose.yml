@@ -9,6 +9,8 @@ services:
         build:
             dockerfile: Dockerfile
             context: ./nginx
+        volumes:
+            - /etc/letsencrypt:/etc/letsencrypt
         ports:
             - '80:80'
 
