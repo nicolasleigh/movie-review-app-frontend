@@ -3,11 +3,12 @@ version: '3.8'
 services:
     nginx:
         depends_on:
+            - frontend
             - backend
         restart: always
         build:
             dockerfile: Dockerfile
-            context: ./
+            context: ./nginx
         ports:
             - '80:80'
 
@@ -29,12 +30,13 @@ services:
             - OFFICIAL_EMAIL=hello@linze.me
             - RESET_PASSWORD_URL=https://linze.me
 
-    # frontend:
-    #   environment:
-    #     - VITE_BASE_URL=/api
-    #   build:
-    #     dockerfile: Dockerfile
-    #     context: ./frontend
-    #   volumes:
-    #     - /app/node_modules
-    #     - ./frontend:/app
+    frontend:
+        restart: always
+        environment:
+            - VITE_BASE_URL=/api
+        build:
+            dockerfile: Dockerfile
+            context: ./
+        volumes:
+            - /app/node_modules
+            - ./:/app
