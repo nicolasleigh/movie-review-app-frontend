@@ -13,6 +13,7 @@ services:
             - /etc/letsencrypt:/etc/letsencrypt
         ports:
             - '80:80'
+            - '443:443'
 
     backend:
         restart: always
