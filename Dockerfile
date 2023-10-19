@@ -1,8 +1,8 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
-RUN npm ci
 COPY package.json ./
 COPY package-lock.json ./
+RUN npm ci
 COPY ./ ./
 ENV VITE_BASE_URL="/api"
 RUN npm run build
