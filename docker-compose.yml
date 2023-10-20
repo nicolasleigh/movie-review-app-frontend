@@ -29,7 +29,8 @@ services:
             - CLOUD_API_SECRET=tjmI3NQDFz2JCgJMCKlug92qcHY
             - CLOUD_API_KEY=851412362268586
             - CLOUD_NAME=dzociog2r
-            - BREVO_API_KEY=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
+            - MAIL_TRAP_USER=fdab8446217979
+            - MAIL_TRAP_PASS=746d901816952f
             - OFFICIAL_EMAIL=hello@linze.me
             - RESET_PASSWORD_URL=https://linze.me
 
